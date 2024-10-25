@@ -1,0 +1,102 @@
+/* Dashboard.css */
+
+.dashboard {
+  padding: 20px;
+  font-family: 'Arial', sans-serif; /* Consistent font for readability */
+  background-color: #f4f7fa; /* Light background for contrast */
+}
+
+h2 {
+  margin-bottom: 20px;
+  text-align: center; /* Center the header */
+  color: #0c0202; /* Darker text for better readability */
+  font-size: 24px; /* Slightly larger font size for emphasis */
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns for larger screens */
+  gap: 30px; /* Space between cards */
+  justify-items: center; /* Center align the cards */
+}
+
+/* Adjust the card styling */
+.dashboard-card {
+  background-color: #5a9bd4; /* Primary card color */
+  border-radius: 10px; /* Rounded corners for cards */
+  padding: 40px; /* Padding inside cards */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+  text-align: center; /* Center text alignment */
+  color: white; /* White text for contrast */
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+  width: 100%; /* Full width for responsive design */
+  max-width: 350px; /* Limit card width */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+}
+
+.dashboard-card:hover {
+  background-color: #0f3c5f; /* Change color on hover for feedback */
+  transform: translateY(-5px); /* Slight lift effect on hover */
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center align card content */
+}
+
+.card-title {
+  font-size: 16px; /* Larger font size for titles */
+  font-weight: bold; /* Make the title stand out */
+  margin-bottom: 5px; /* Space between title and count */
+}
+
+.card-count {
+  background-color: #1574bd; /* Background for the count circle */
+  border-radius: 50%; /* Circular shape */
+  width: 70px; /* Width for count circle */
+  height: 70px; /* Height for count circle */
+  display: flex;
+  align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
+  margin-top: 10px; /* Space above count circle */
+  font-size: 26px; /* Font size for count */
+  color: white; /* White text color */
+  font-weight: bold; /* Bold text for better visibility */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for count circle */
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for medium screens */
+  }
+
+  h2 {
+    font-size: 22px; /* Slightly smaller header for medium screens */
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr; /* 1 column for mobile screens */
+  }
+
+  .dashboard-card {
+    padding: 20px; /* Reduce padding for mobile cards */
+    margin: 0 auto; /* Center card in the container */
+  }
+
+  h2 {
+    font-size: 20px; /* Smaller header for mobile screens */
+  }
+
+  .card-count {
+    width: 60px; /* Smaller count circle */
+    height: 60px; /* Adjust height for smaller circle */
+    font-size: 22px; /* Adjust font size for count */
+  }
+}
