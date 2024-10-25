@@ -9,11 +9,11 @@ export const Navigation = (props) => {
     width: '100%', // Full width
     padding: '0 20px', // Add some horizontal padding
     boxSizing: 'border-box', // Include padding in width calculation
-    marginRight: '-35%',
+    marginRight: '-55%',
   };
 
   const navItemStyle = {
-    margin: '0 15px', // Spacing between nav items
+    margin: '0 -10px', // Further reduced spacing between nav items
   };
 
   return (
@@ -56,7 +56,7 @@ export const Navigation = (props) => {
           <ul className="nav navbar-nav navbar-right" style={navStyle}>
             {/* Existing nav items */}
             <li style={navItemStyle}><a href="#about" className="page-scroll">About</a></li>
-            <li style={navItemStyle}><a href="#about" className="page-scroll">Why Marlin</a></li>
+            <li style={navItemStyle}><a href="#why-marlin" className="page-scroll">Why Marlin</a></li>
             <li style={navItemStyle}><a href="#services" className="page-scroll">Packages</a></li>
             <li style={navItemStyle}><a href="#contact" className="page-scroll">Contact</a></li>
             <li style={navItemStyle}><a href="#review" className="page-scroll">Review</a></li>
