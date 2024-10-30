@@ -35,11 +35,6 @@
     color: #555;
 }
 
-/* Additional spacing for From Date */
-.p-panel .from-date-label {
-    margin-top: 10px; /* Adjust the value as needed for spacing */
-}
-
 /* Dropdown and Calendar Styles */
 .p-dropdown,
 .p-calendar {
@@ -193,10 +188,31 @@
     font-size: 16px; /* Icon size */
 }
 
+/* Card Styles */
+.p-card {
+    margin-bottom: 20px; /* Spacing between cards */
+    border: 1px solid #ddd; /* Light border around cards */
+    border-radius: 8px; /* Rounded corners */
+    background-color:#3498e4 ; /* White background for cards */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for cards */
+    padding: 10px; /* Padding inside cards */
+    margin: 10px 0;
+}
+
+.p-card h5 {
+    font-size: 18px; /* Title font size */
+    color: #007ad9; /* Title color */
+    margin-bottom: 10px; /* Space below title */
+}
+
+.p-card p {
+    margin: 5px 0; /* Spacing for paragraphs within cards */
+}
+
 /* Responsive Design Adjustments */
 @media (max-width: 600px) {
     .report-generator-unique {
-        padding: 15px;
+        padding: 25px;
     }
 
     .p-panel {
@@ -210,6 +226,8 @@
     .p-dialog-footer {
         flex-direction: column; /* Stack buttons on smaller screens */
         align-items: flex-end; /* Align buttons to the right */
+        display: flex;
+        justify-content: center;
     }
 
     .p-button-secondary {

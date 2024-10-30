@@ -199,36 +199,52 @@ const Scheduler = () => {
     initialValues: { name: '', occurrence: new Date() },
     validationSchema: Yup.object({
       name: Yup.string().required('Name is required'),
-      occurrence: Yup.date().required('Occurrence date is required').min(new Date(), 'Occurrence date cannot be in the past'),
+      ...(activeTable === 'guest' ? {} : {
+        occurrence: Yup.date().required('Occurrence date is required').min(new Date(), 'Occurrence date cannot be in the past'),
+      }),
     }),
     onSubmit: (values) => {
       if (selectedRow === null || selectedColumn === null) return;
 
       const newData = { ...guestData };
-
       let currentDate = new Date(date);
-      const endDate = new Date(values.occurrence);
 
-      while (currentDate <= endDate) {
-        const currentFormattedDate = currentDate.toDateString();
-
-        if (!newData[currentFormattedDate]) {
-          newData[currentFormattedDate] = getInitialGuestNames();
-        }
-
-        const updatedNames = newData[currentFormattedDate][activeTable].map((slot, idx) =>
+      if (activeTable === 'guest') {
+        // Handle guest submission without occurrence
+        newData[formattedDate] = newData[formattedDate] || getInitialGuestNames();
+        const updatedNames = newData[formattedDate][activeTable].map((slot, idx) =>
           idx === selectedColumn
             ? slot.map((name, i) =>
-                i === selectedRow ? `${values.name} - ${values.occurrence.toLocaleDateString()}` : name)
+                i === selectedRow ? `${values.name}` : name)
             : slot
         );
 
-        newData[currentFormattedDate] = {
-          ...newData[currentFormattedDate],
-          [activeTable]: updatedNames,
-        };
+        newData[formattedDate][activeTable] = updatedNames;
+      } else {
+        // Handle normal submission with occurrence
+        const endDate = new Date(values.occurrence);
 
-        currentDate.setDate(currentDate.getDate() + 1);
+        while (currentDate <= endDate) {
+          const currentFormattedDate = currentDate.toDateString();
+
+          if (!newData[currentFormattedDate]) {
+            newData[currentFormattedDate] = getInitialGuestNames();
+          }
+
+          const updatedNames = newData[currentFormattedDate][activeTable].map((slot, idx) =>
+            idx === selectedColumn
+              ? slot.map((name, i) =>
+                  i === selectedRow ? `${values.name} - ${values.occurrence.toLocaleDateString()}` : name)
+              : slot
+          );
+
+          newData[currentFormattedDate] = {
+            ...newData[currentFormattedDate],
+            [activeTable]: updatedNames,
+          };
+
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
       }
 
       setGuestData(newData);
@@ -254,7 +270,7 @@ const Scheduler = () => {
       {activeTable === 'evening' && renderTable(['2.00-3.00PM', '3.00-4.00PM', '4.00-5.00PM', '5.00-6.00PM', '6.00-7.00PM', '7.00-8.00PM'])}
       {activeTable === 'guest' && renderTable(['11AM-2PM'])}
 
-      <Dialog header={isEditing ? "Edit Guest" : "Add Guest"} visible={showDialog} style={{ width: '50vw' }} onHide={() => setShowDialog(false)}>
+      <Dialog header={isEditing ? "Edit Guest" : "Add Member"} visible={showDialog} style={{ width: '50vw' }} onHide={() => setShowDialog(false)}>
         <form onSubmit={formik.handleSubmit} className="p-fluid">
           <div className="p-field">
             <label htmlFor="name">Name</label>
@@ -267,16 +283,18 @@ const Scheduler = () => {
             />
             {formik.touched.name && formik.errors.name && <small className="p-error">{formik.errors.name}</small>}
           </div>
-          <div className="p-field">
-            <label htmlFor="occurrence">Occurrence</label>
-            <Calendar
-              id="occurrence"
-              value={formik.values.occurrence}
-              onChange={(e) => formik.setFieldValue('occurrence', e.value)}
-              minDate={new Date()}
-            />
-            {formik.touched.occurrence && formik.errors.occurrence && <small className="p-error">{formik.errors.occurrence}</small>}
-          </div>
+          {activeTable !== 'guest' && (
+            <div className="p-field">
+              <label htmlFor="occurrence">Occurrence</label>
+              <Calendar
+                id="occurrence"
+                value={formik.values.occurrence}
+                onChange={(e) => formik.setFieldValue('occurrence', e.value)}
+                minDate={new Date()}
+              />
+              {formik.touched.occurrence && formik.errors.occurrence && <small className="p-error">{formik.errors.occurrence}</small>}
+            </div>
+          )}
           <Button type="submit" label="Save" icon="pi pi-check" />
         </form>
       </Dialog>
@@ -284,7 +302,6 @@ const Scheduler = () => {
   );
 };
 
-// Main application component
 const App = () => {
   return (
     <SchedulerProvider>

@@ -74,17 +74,18 @@ const PaymentReportGenerator = () => {
         <div className="payment-report-generator">
             <h2>Payment Report Generator</h2>
             <div className="payment-report-input-section">
-                <label>From Date:</label>
-                <Calendar value={fromDate} onChange={(e) => setFromDate(e.value)} showIcon />
-                <label>To Date:</label>
-                <Calendar value={toDate} onChange={(e) => setToDate(e.value)} showIcon />
-                <label>Filter:</label>
+                <label></label>
+                <Calendar value={fromDate} onChange={(e) => setFromDate(e.value)} showIcon placeholder="Select From Date" />
+                <label></label>
+                <Calendar value={toDate} onChange={(e) => setToDate(e.value)} showIcon placeholder="Select To Date" />
+                <label></label>
                 <Dropdown value={selectedFilter} options={filterOptions} onChange={(e) => setSelectedFilter(e.value)} placeholder="Select Filter" />
-                <label>Payment Method:</label>
+                <label></label>
                 <Dropdown value={selectedPaymentMethod} options={paymentMethodOptions} onChange={(e) => setSelectedPaymentMethod(e.value)} placeholder="Select Payment Method" />
-                <div style={{ display: 'flex', justifyContent: 'center', height: '9vh' }}>
+                <div style={{ display: 'flex', height: '9vh', marginLeft: '74%', width: '250px' }}>
                     <Button 
                         label="Generate Report" 
+                        icon="pi pi-file"
                         onClick={handleGenerateReport} 
                         className="generate-reporter-btn" 
                     />

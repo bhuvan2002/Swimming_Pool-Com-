@@ -13,10 +13,14 @@
   padding: 10px 20px;
   background-color: #1c80cf; /* Example background color */
   color: white; /* Example text color */
-  position: sticky;
-  height: 80px;
+  position: fixed; /* Fixed header */
+  top: 0; /* Stick to top */
+  left: 0; /* Align to left */
+  right: 0; /* Align to right */
+  height: 80px; /* Header height */
   border: 2px solid #fff;
   box-shadow: 0 0 px rgba(0, 0, 0, 0.9);
+  z-index: 1000; /* Ensure it is above other elements */
 }
 
 .header-title {
@@ -41,20 +45,18 @@
 
 .logo-container {
   display: flex;
-  justify-content: center;  /* Centers the content horizontally */
-  align-items: center;      /* Centers the content vertically */
-  height: 100vh;            /* Optional: If you want to center within the full viewport height */
+  justify-content: center; /* Centers the content horizontally */
+  align-items: center; /* Centers the content vertically */
 }
 
-
+/* Logo Styling */
 .company-logo {
-  width: 125px;  /* Fixed width for the logo */
-  height: auto;  /* Height adjusts automatically to maintain aspect ratio */
-  max-width: 100%;  /* Ensures logo doesn't exceed container width */
+  width: 125px; /* Fixed width for the logo */
+  height: auto; /* Height adjusts automatically to maintain aspect ratio */
+  max-width: 100%; /* Ensures logo doesn't exceed container width */
   max-height: 100%; /* Ensures logo doesn't exceed container height */
   transition: box-shadow 0.2s;
 }
-
 
 /* Profile Photo */
 .profile-photo {
@@ -67,6 +69,7 @@
 .main-content {
   display: flex;
   flex-grow: 1;
+  margin-top: 80px; /* Space for the fixed header */
   background-color: #f8f9fa;
 }
 
@@ -89,27 +92,24 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  background-color: #f3f2f1;
-  color: #1c80cf;
+  position: fixed; /* Fix sidebar */
+  top: 80px; /* Below the fixed header */
+  bottom: 0; /* Full height */
+  width: 220px; /* Set width for expanded state */
+  background-color: #1c80cf; /* Sidebar background color */
   transition: width 0.3s ease;
-  height: 100%;
-  background: #0046c8;
-}
-
-.sidebar.expanded {
-  width: 220px;
-  background-color: #1c80cf;
 }
 
 .sidebar.collapsed {
-  width: 50px;
-  background-color: #1c80cf;
+  width: 50px; /* Set width for collapsed state */
 }
 
+/* Toggle Button */
 .toggle-button {
-  margin: 10px;
+  margin: 10px; /* Margin around the toggle button */
   background-color: #1c80cf;
   border: none;
+  align-self: end; /* Center the button horizontally */
 }
 
 .toggle-button:hover {
@@ -134,18 +134,15 @@
 /* Content Area Styling */
 .content-area {
   flex-grow: 1;
+  margin-left: 220px; /* Space for the sidebar */
   padding: 20px;
   transition: margin-left 0.3s ease;
-}
-
-/* When the Sidebar is Expanded */
-.content-area.expanded {
-  margin-left: 0px;
+  overflow-y: auto; /* Allow scrolling in content area */
 }
 
 /* When the Sidebar is Collapsed */
 .content-area.collapsed {
-  margin-left: 0px;
+  margin-right: 90px; /* Adjust margin when sidebar is collapsed */
 }
 
 /* Add Button */
@@ -218,7 +215,7 @@
   border-radius: 3px;
 }
 
-
+/* Profile Overlay */
 .profile-overlay {
   padding: 1rem;
   border-radius: 8px;
@@ -252,4 +249,14 @@
   background-color: #f0f0f0; /* Light grey on hover */
 }
 
-
+.zoom-out {
+  transform: scale(0.8);
+  transform-origin: top left;
+  width: 125%; /* Adjust width to maintain full coverage */
+  overflow: hidden; /* Prevent overflow */
+}
+/* App.css */
+.sidebar .bi {
+  margin-left: 5px; /* Adjust spacing as needed */
+  vertical-align: middle; /* Align with text */
+}

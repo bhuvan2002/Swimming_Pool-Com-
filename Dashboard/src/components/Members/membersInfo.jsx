@@ -3,6 +3,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import { Card } from "primereact/card"; // Import Card component
 import { useNavigate } from "react-router-dom";
 import "./membersinfo.css";
 
@@ -95,9 +96,14 @@ const MemberList = () => {
     </div>
   );
 
+  const titleStyle = {
+    fontFamily: "'YourChosenFont', sans-serif", // Replace with your desired font
+    fontSize: "1.5rem", // Adjust size as needed
+    color: "#333", // Set your desired text color
+  };
+
   return (
     <div>
-      {/* Add Member Button */}
       <div className="add-member-container">
         <Button
           label="Add Member"
@@ -107,9 +113,7 @@ const MemberList = () => {
         />
       </div>
 
-      {/* Members List - Expiring Today */}
-      <h3>Members List - Expiring Today</h3>
-      <div className="members-container">
+      <Card title={<span style={titleStyle}>Members List - Expiring Today</span>} style={{ backgroundColor: "white" }} className="mt-5">
         <DataTable value={membersExpiringToday} className="custom-table">
           <Column field="name" header="Name" />
           <Column field="contact" header="Contact" />
@@ -118,11 +122,9 @@ const MemberList = () => {
           <Column field="package" header="Package" />
           <Column header="Actions" body={actionTemplate} />
         </DataTable>
-      </div>
+      </Card>
 
-      {/* Members List - Expiring in 5 Days */}
-      <h3 className="mt-5">Members List - Expiring in 5 Days</h3>
-      <div className="members-container">
+      <Card title={<span style={titleStyle}>Members List - Expiring in 5 Days</span>} style={{ backgroundColor: "white" }} className="mt-5">
         <DataTable value={membersExpiringIn5Days} className="custom-table">
           <Column field="name" header="Name" />
           <Column field="contact" header="Contact" />
@@ -131,20 +133,21 @@ const MemberList = () => {
           <Column field="package" header="Package" />
           <Column header="Actions" body={actionTemplate} />
         </DataTable>
-      </div>
+      </Card>
 
-      {/* Full Members List */}
-      <h3 className="mt-5">Full Members List</h3>
-      <div className="p-inputgroup mb-3">
-        <span className="p-inputgroup-addon">
-          <i className="pi pi-search"></i>
-        </span>
-        <InputText
-          placeholder="Search Members ( Enter Name or Contact Number )"
-        />
-      </div>
-      <div className="members-container">
-        <DataTable value={allMembers} className="custom-table">
+      <Card title={<span style={titleStyle}>Full Members List</span>} style={{ backgroundColor: "white" }} className="mt-5">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "60%" }}>
+          <div className="p-inputgroup" style={{ flexGrow: 2, marginLeft: "20px" }}>
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-search"></i>
+            </span>
+            <InputText
+              placeholder="Search Members ( Enter Name or Contact Number )"
+              style={{ width: "100%", minWidth: "250px", marginTop:"" }}
+            />
+          </div>
+        </div>
+        <DataTable value={allMembers} className="custom-table" style={{ marginTop: "10px" }}>
           <Column field="name" header="Name" />
           <Column field="contact" header="Contact" />
           <Column field="paymentstatus" header="Payment Status" />
@@ -153,7 +156,7 @@ const MemberList = () => {
           <Column field="package" header="Package" />
           <Column header="Actions" body={actionTemplate} />
         </DataTable>
-      </div>
+      </Card>
     </div>
   );
 };

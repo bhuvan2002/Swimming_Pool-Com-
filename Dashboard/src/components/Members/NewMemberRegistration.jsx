@@ -19,7 +19,6 @@ const NewMemberRegistration = () => {
     pincode: Yup.string()
       .required('Pincode is required')
       .matches(/^[0-9]{6}$/, 'Invalid pincode'),
-    parentOrGuardian: Yup.string().required('Parent/Guardian Name is required'),
     coachingMembership: Yup.string().required('Coaching or Membership is required'),
     contact: Yup.string()
       .required('Contact is required')
@@ -53,7 +52,6 @@ const NewMemberRegistration = () => {
       area: '',
       state: 'Karnataka',
       pincode: '',
-      parentOrGuardian: '',
       coachingMembership: '',
       contact: '',
       address: '',
@@ -176,7 +174,7 @@ const NewMemberRegistration = () => {
 
         <div className="section">
           <h3>Package & Payment Information</h3>
-          {['packageType', 'packageStartDate', 'packageActualStartDate', 'packageEndDate', 'amount', 'discount', 'paymentType', 'paymentStatus'].map((field) => (
+          {['packageType', 'packageStartDate', 'packageActualStartDate', 'packageEndDate', 'amount', 'discount', 'discountedAmount','paymentType', 'paymentStatus'].map((field) => (
             <div className="form-group" key={field}>
               <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}:</label>
               <input type={field.includes('Date') ? 'date' : 'text'} id={field} {...formik.getFieldProps(field)} />
