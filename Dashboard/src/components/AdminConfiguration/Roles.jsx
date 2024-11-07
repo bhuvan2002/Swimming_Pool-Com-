@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-// Roles Component
 const Roles = () => {
   const [roles, setRoles] = useState([{ name: 'SuperAdmin', features: '' }]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -39,36 +38,38 @@ const Roles = () => {
   };
 
   return (
-    <div className="roles-container">
-      <h2>Manage Roles</h2>
-      <button className="add-role-button" onClick={() => setIsDialogOpen(true)}>
-        Add Role
-      </button>
-      <table className="roles-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Features</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {roles.map((role, index) => (
-            <tr key={index}>
-              <td>{role.name}</td>
-              <td>{role.features}</td>
-              <td>
-                <button className="edit-button" onClick={() => handleEditRole(index)}>
-                  Edit
-                </button>
-                <button className="delete-button" onClick={() => handleDeleteRole(index)}>
-                  Delete
-                </button>
-              </td>
+    <div className={`roles-container ${isDialogOpen ? 'blurred' : ''}`}>
+      <div className="content">
+        <h2>Manage Roles</h2>
+        <button className="add-role-button" onClick={() => setIsDialogOpen(true)}>
+          Add Role
+        </button>
+        <table className="roles-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Features</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {roles.map((role, index) => (
+              <tr key={index}>
+                <td>{role.name}</td>
+                <td>{role.features}</td>
+                <td>
+                  <button className="edit-button" onClick={() => handleEditRole(index)}>
+                    Edit
+                  </button>
+                  <button className="delete-button" onClick={() => handleDeleteRole(index)}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {isDialogOpen && (
         <div className="role-dialog">
@@ -111,6 +112,17 @@ const Roles = () => {
           border-radius: 8px;
           background-color: white;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          position: relative;
+        }
+
+        .blurred .content {
+          filter: blur(5px);
+          pointer-events: none;
+          user-select: none;
+        }
+
+        .content {
+          transition: filter 0.3s;
         }
 
         h2 {
@@ -128,6 +140,7 @@ const Roles = () => {
           border-radius: 4px;
           cursor: pointer;
           transition: background-color 0.3s;
+          margin-left: 87%;
         }
 
         .add-role-button:hover {

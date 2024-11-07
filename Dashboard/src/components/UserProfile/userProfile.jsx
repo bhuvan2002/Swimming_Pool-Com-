@@ -26,13 +26,13 @@ const UserProfileScreen = () => {
         address: Yup.string().required('Address is required'),
         number: Yup.string()
             .matches(/^\d{10}$/, 'Please enter a valid 10-digit number')
-            .required('Number is required'),
+            .required('Contact Number is required'),
         email: Yup.string()
             .email('Invalid email format')
             .required('Email is required'),
         otpForNumber: otpNumberVisible ? Yup.string().required('OTP for number is required') : Yup.string(),
         otpForEmail: otpEmailVisible ? Yup.string().required('OTP for email is required') : Yup.string(),
-        captcha: Yup.string().required('CAPTCHA is required'),
+        captcha: Yup.string().required('Captcha is required'),
     });
 
     const sendOtp = (type, values) => {
@@ -78,12 +78,12 @@ const UserProfileScreen = () => {
 
                         <div className="form-field">
                             <label htmlFor="address" className="form-label">Address</label>
-                            <Field name="address" as={InputText} className="form-input" />
+                            <Field name="address" as="textarea" className="form-input" rows="4" />
                             <ErrorMessage name="address" component="small" className="error-message" />
                         </div>
 
                         <div className="form-field">
-                            <label htmlFor="number" className="form-label">Number</label>
+                            <label htmlFor="number" className="form-label">Contact Number</label>
                             <div className="input-group">
                                 <Field name="number" as={InputText} className="form-input" />
                                 {touched.number && !errors.number && (
@@ -95,7 +95,7 @@ const UserProfileScreen = () => {
 
                         {otpNumberVisible && (
                             <div className="form-field">
-                                <label htmlFor="otpForNumber" className="form-label">Enter OTP for Number</label>
+                                <label htmlFor="otpForNumber" className="form-label">Enter OTP for Contact Number</label>
                                 <Field name="otpForNumber" as={InputText} className="form-input" />
                                 <ErrorMessage name="otpForNumber" component="small" className="error-message" />
                             </div>

@@ -33,6 +33,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 5px; /* Add margin for space between input and error */
 }
 
 .guest-registration-form .input-row label {
@@ -61,9 +62,11 @@
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
 
-.guest-registration-form .otp-input-group {
-  display: flex;
-  align-items: center;
+.guest-registration-form .error {
+  color: #d9534f;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-left: 34%;
   flex: 2;
 }
 
@@ -111,12 +114,6 @@
   transform: translateY(-2px);
 }
 
-.guest-registration-form .error {
-  color: #d9534f;
-  font-size: 14px;
-  margin-top: 5px;
-}
-
 @media (max-width: 600px) {
   .guest-registration-form {
     width: 90%;
@@ -126,6 +123,7 @@
   .guest-registration-form .input-row {
     flex-direction: column;
     align-items: flex-start;
+    margin-bottom: 0; /* Reset margin for mobile */
   }
 
   .guest-registration-form .input-row label {

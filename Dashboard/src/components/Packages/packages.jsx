@@ -10,11 +10,14 @@ import './packages.css';
 
 const Package = ({ packages, addPackage, editPackage, deletePackage }) => {
   const [displayDialog, setDisplayDialog] = useState(false);
+  const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState(null);
   const [packageName, setPackageName] = useState('');
   const [bulletPoints, setBulletPoints] = useState('');
   const [packageCost, setPackageCost] = useState('');
   const [packageDuration, setPackageDuration] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [imageName, setImageName] = useState('');
   const [editIndex, setEditIndex] = useState(null);
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discount, setDiscount] = useState(null);
@@ -39,19 +42,22 @@ const Package = ({ packages, addPackage, editPackage, deletePackage }) => {
   const handleAddClick = () => {
     let validationErrors = validateForm();
     if (Object.keys(validationErrors).length === 0) {
+      const costValue = parseFloat(packageCost);
+      const discountValue = parseFloat(discount) || 0;
+
       const discountedPrice = hasDiscount 
-        ? packageCost - (packageCost * discount / 100) 
-        : packageCost;
+        ? costValue - (costValue * discountValue / 100) 
+        : costValue;
 
       const newPackage = {
         name: packageName,
         bulletPoints: bulletPoints,
-        cost: packageCost,
+        cost: costValue,
         duration: packageDuration,
         image: uploadedImage,
         discountedPrice,
         hasDiscount,
-        discount,
+        discount: discountValue,
         startDate,
         endDate
       };
@@ -70,8 +76,8 @@ const Package = ({ packages, addPackage, editPackage, deletePackage }) => {
   const validateForm = () => {
     let errors = {};
     if (!packageName) errors.packageName = 'Package name is required.';
-    if (!bulletPoints || bulletPoints.split('\n').length > 5) 
-      errors.bulletPoints = '5  points are required, one per line.';
+    if (!bulletPoints || bulletPoints.split('\n').length !== 5) 
+      errors.bulletPoints = '5 points are required, one per line.';
     if (!packageCost || isNaN(packageCost)) 
       errors.packageCost = 'Valid package cost is required.';
     if (packageDuration === null || packageDuration < 1 || packageDuration > 9) 
@@ -89,6 +95,7 @@ const Package = ({ packages, addPackage, editPackage, deletePackage }) => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setUploadedImage(imageUrl);
+      setImageName(file.name);
       setErrors(prevErrors => ({ ...prevErrors, uploadedImage: '' }));
     }
   };
@@ -107,6 +114,7 @@ const Package = ({ packages, addPackage, editPackage, deletePackage }) => {
     setPackageCost('');
     setPackageDuration(null);
     setUploadedImage(null);
+    setImageName('');
     setHasDiscount(false);
     setDiscount(null);
     setStartDate(null);
@@ -118,9 +126,10 @@ const Package = ({ packages, addPackage, editPackage, deletePackage }) => {
     const pkg = packages[index];
     setPackageName(pkg.name);
     setBulletPoints(pkg.bulletPoints);
-    setPackageCost(pkg.cost);
+    setPackageCost(pkg.cost.toString());
     setPackageDuration(pkg.duration);
     setUploadedImage(pkg.image);
+    setImageName(pkg.imageName);
     setHasDiscount(pkg.hasDiscount);
     setDiscount(pkg.discount);
     setStartDate(pkg.startDate);
@@ -129,68 +138,75 @@ const Package = ({ packages, addPackage, editPackage, deletePackage }) => {
     setDisplayDialog(true);
   };
 
+  const showDeleteDialog = (index) => {
+    setDeleteIndex(index);
+    setDeleteDialogVisible(true);
+  };
+
+  const confirmDelete = () => {
+    deletePackage(deleteIndex);
+    setDeleteDialogVisible(false);
+    setDeleteIndex(null);
+  };
+
   return (
     <div className="container">
-      <Button label="+ Add Package" onClick={handleAddPackageClick} className="button-primary add-package-button" />
+      <div className="button-container">
+        <Button 
+          label="+ Add Package" 
+          onClick={handleAddPackageClick} 
+          className="button-primary" style={{right:'-300px'}}
+        />
+      </div>
       <Dialog 
-        header={editIndex !== null ? "Edit Package" : "Add Package"} 
         visible={displayDialog} 
-        style={{ width: '50vw' }} 
+        className="centered-dialog"
         onHide={() => setDisplayDialog(false)}
       >
-        <div className="fade-in">
-          <div className="form-field">
-            <Button 
-              label="Upload" 
-              onClick={() => document.getElementById('fileInput').click()} 
-              className="button-primary" 
-              style={{ marginTop: '10px', marginBottom: '10px' }} 
-            />
-            <input 
-              type="file" 
-              accept=".png,.jpg" 
-              onChange={handleImageChange} 
-              id="fileInput" 
-              style={{ display: 'none' }} 
-            />
-            {uploadedImage && <img src={uploadedImage} alt="Uploaded" className="uploaded-image" />}
-            {errors.uploadedImage && <small className="p-error">{errors.uploadedImage}</small>}
+        <div className="form-content">
+          <div className="dialog-header">
+            <h3 className="dialog-title">{editIndex !== null ? "Edit Package" : "Add Package"}</h3>
           </div>
 
-          <div className="form-field">
+          <span className="form-field full-width">
             <InputText 
               value={packageName} 
               onChange={(e) => { 
                 setPackageName(e.target.value.toUpperCase()); 
                 setErrors(prevErrors => ({ ...prevErrors, packageName: '' })); 
               }} 
-              placeholder="PACKAGE NAME" 
+              placeholder="PACKAGE NAME"
+              className="input-text"
             />
             {errors.packageName && <small className="p-error">{errors.packageName}</small>}
-          </div>
+          </span>
 
-          <div className="form-field">
+          <span className="form-field full-width">
             <InputTextarea 
               value={bulletPoints} 
               onChange={handleBulletPointsChange} 
               placeholder="5 DESCRIPTION POINTS (one per line)" 
-              rows={5} 
+              rows={4} 
+              className="input-textarea"
             />
             {errors.bulletPoints && <small className="p-error">{errors.bulletPoints}</small>}
-          </div>
-          <div className="form-field">
+          </span>
+
+          <span className="form-field">
             <InputText 
-              value={packageCost} 
+              value={packageCost ? `RS ${packageCost}` : ''} 
               onChange={(e) => { 
-                setPackageCost(e.target.value); 
+                const costValue = e.target.value.replace(/RS\s*/i, '');
+                setPackageCost(costValue); 
                 setErrors(prevErrors => ({ ...prevErrors, packageCost: '' })); 
               }} 
-              placeholder="PACKAGE COST" 
+              placeholder="RS PACKAGE COST"
+              className="input-text"
             />
             {errors.packageCost && <small className="p-error">{errors.packageCost}</small>}
-          </div>
-
-          <div className="form-field">
+          </span>
+          
+          <span className="form-field">
             <InputNumber 
               value={packageDuration} 
               onValueChange={(e) => { 
@@ -200,65 +216,124 @@ const Package = ({ packages, addPackage, editPackage, deletePackage }) => {
               placeholder="PACKAGE DURATION" 
               suffix=" months" 
               min={1} 
-              max={9} 
+              max={9}
+              className="input-number"
             />
             {errors.packageDuration && <small className="p-error">{errors.packageDuration}</small>}
-          </div>
+          </span>
 
-          <div className="form-field">
+          <span className="form-field">
             <Calendar 
               value={startDate} 
               onChange={(e) => { 
                 setStartDate(e.value); 
                 setErrors(prevErrors => ({ ...prevErrors, startDate: '' })); 
               }} 
-              placeholder="Start Date" 
+              placeholder="Start Date"
+              className="calendar"
             />
             {errors.startDate && <small className="p-error">{errors.startDate}</small>}
-          </div>
+          </span>
 
-          <div className="form-field">
+          <span className="form-field">
             <Calendar 
               value={endDate} 
-              onChange={(e) => { 
-                setEndDate(e.value); 
-              }} 
-              placeholder="End Date" 
+              onChange={(e) => setEndDate(e.value)} 
+              placeholder="End Date"
+              className="calendar"
             />
-          </div>
+          </span>
 
-          <div className="form-field checkbox-field">
-            <Checkbox 
-              inputId="discount" 
-              checked={hasDiscount} 
-              onChange={(e) => { 
-                setHasDiscount(e.checked); 
-                setErrors(prevErrors => ({ ...prevErrors, discount: '' })); 
-              }} 
-            />
-            <label htmlFor="discount" className="p-checkbox-label">Discount</label>
-            {hasDiscount && (
-              <InputNumber 
-                value={discount} 
-                onValueChange={(e) => { 
-                  setDiscount(e.value); 
+          <div className="upload-discount-container">
+            <div className="checkbox-container">
+              <Checkbox 
+                inputId="discount" 
+                checked={hasDiscount} 
+                onChange={(e) => { 
+                  setHasDiscount(e.checked); 
+                  if (!e.checked) setDiscount(null);
                   setErrors(prevErrors => ({ ...prevErrors, discount: '' })); 
                 }} 
-                placeholder="DISCOUNT %" 
-                suffix="%" 
-                min={1} 
-                max={99} 
-                className="discount-input"
               />
-            )}
-            {errors.discount && <small className="p-error">{errors.discount}</small>}
+              <label htmlFor="discount" className="discount-label">Discount</label>
+              {hasDiscount && (
+                <InputNumber 
+                  value={discount} 
+                  onValueChange={(e) => { 
+                    setDiscount(e.value); 
+                    setErrors(prevErrors => ({ ...prevErrors, discount: '' })); 
+                  }} 
+                  placeholder="DISCOUNT %" 
+                  suffix="%" 
+                  min={1} 
+                  max={99}
+                  className="input-number-discount"
+                />
+              )}
+            </div>
+            
+            <div className="image-upload-container">
+              <label htmlFor="file-upload" className="custom-file-upload">
+                Upload Image
+              </label>
+              <input 
+                id="file-upload" 
+                type="file" 
+                accept="image/*" 
+                onChange={handleImageChange} 
+                style={{ display: 'none' }} 
+              />
+            </div>
           </div>
 
+          {imageName && <p className="image-name">{imageName}</p>}
+
           <div className="button-group">
-            <Button label={editIndex !== null ? "Save" : "Add"} onClick={handleAddClick} className="button-primary" />
+            <Button 
+              label={editIndex !== null ? "Save" : "Add"} 
+              onClick={handleAddClick} 
+              className="button-primary" style={{right: '-470px', width: '180px'}}
+            />
           </div>
         </div>
       </Dialog>
+      
+      <Dialog
+        header="Confirm Delete"
+        visible={deleteDialogVisible}
+        style={{ width: '30vw' }}
+        onHide={() => setDeleteDialogVisible(false)}
+        footer={
+          <span className="button-group">
+            <Button label="No" icon="pi pi-times" onClick={() => setDeleteDialogVisible(false)} className="p-button-text" />
+            <Button label="Yes" icon="pi pi-check" onClick={confirmDelete} autoFocus />
+          </span>
+        }
+      >
+        <p>Are you sure you want to delete the package?</p>
+      </Dialog>
+
+      <section className="package-list">
+        {packages.map((pkg, index) => (
+          <article key={index} className="package-item">
+            {pkg.image && <img src={pkg.image} alt={pkg.name} className="package-image" />}
+            <header className="package-header">
+              <h3>{pkg.name}</h3>
+            </header>
+            <div>
+              <pre>{pkg.bulletPoints}</pre>
+              <p>Original Cost: RS {pkg.cost}</p>
+              {pkg.hasDiscount && <p>Discount: {pkg.discount}%</p>}
+              <p>Final Cost: RS {pkg.discountedPrice.toFixed(2)}</p>
+              <p>Duration: {pkg.duration} months</p>
+            </div>
+            <div className="package-footer">
+              <Button label="Edit" onClick={() => handleEdit(index)} className="button-primary" />
+              <Button label="Delete" onClick={() => showDeleteDialog(index)} className="button-primary" />
+            </div>
+          </article>
+        ))}
+      </section>
     </div>
   );
 };

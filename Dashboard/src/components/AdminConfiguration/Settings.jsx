@@ -18,11 +18,11 @@ const Settings = () => {
           noOfSlots: '',
         }}
         validationSchema={Yup.object({
-          otpTimeout: Yup.string().required('Required'),
-          contactNumber: Yup.string().required('Required'),
-          contactAddress: Yup.string().required('Required'),
-          emailId: Yup.string().email('Invalid email address').required('Required'),
-          noOfSlots: Yup.string().required('Required'),
+          otpTimeout: Yup.string().required('OTP Timeout is Required'),
+          contactNumber: Yup.string().required('Contact Number is Required'),
+          contactAddress: Yup.string().required('Contact Address is Required'),
+          emailId: Yup.string().email('Invalid email address').required('Email ID is Required'),
+          noOfSlots: Yup.string().required('Number of Slots is Required'),
         })}
         onSubmit={(values) => {
           console.log('Settings Submitted: ', values);

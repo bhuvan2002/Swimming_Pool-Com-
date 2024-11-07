@@ -113,3 +113,9 @@ input[type='file'] {
   margin-bottom: 20px; /* Add space below the button */
 }
 
+#contact {
+  margin-bottom: 5px; /* Adjust the value as needed for spacing */
+}
+#otp {
+  margin-bottom: 10px; /* Adjust the value as needed for spacing */
+}

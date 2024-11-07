@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
@@ -15,34 +15,46 @@ const ReportGenerator = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [displayDialog, setDisplayDialog] = useState(false);
 
-  const [activeMembers] = useState([
-    { name: 'John Doe', contact: '123-456-7890', package: 'Standard', amountPaid: '$100', amountRemaining: '$50', duration: '6 months', registrationDate: '2024-09-15' },
-    { name: 'Jane Smith', contact: '987-654-3210', package: 'Premium', amountPaid: '$200', amountRemaining: '$0', duration: '1 year', registrationDate: '2024-09-20' },
-  ]);
-
-  const [expiredMembers] = useState([
-    { name: 'Alice Johnson', contact: '555-555-5555', package: 'Standard', amountPaid: '$100', amountRemaining: '$0', duration: 'Expired 2 months ago', registrationDate: '2024-07-15' },
-    { name: 'Bob Brown', contact: '444-444-4444', package: 'Basic', amountPaid: '$50', amountRemaining: '$20', duration: 'Expired 1 month ago', registrationDate: '2024-08-20' },
-  ]);
-
-  const [guestDetails] = useState([
-    { name: 'Tom Hanks', contact: '111-222-3333', package: 'Guest', amountPaid: '$0', amountRemaining: '$0', duration: 'N/A', registrationDate: '2024-09-10' },
-    { name: 'Emma Watson', contact: '222-333-4444', package: 'Guest', amountPaid: '$0', amountRemaining: '$0', duration: 'N/A', registrationDate: '2024-09-11' },
-  ]);
+  const [activeMembers, setActiveMembers] = useState([]);
+  const [expiredMembers, setExpiredMembers] = useState([]);
+  const [guestDetails, setGuestDetails] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const timePeriodOptions = [
     { label: 'All', value: 'all' },
     { label: 'Month', value: 'monthly' },
     { label: 'Last 3 Months', value: 'current_quarter_month' },
     { label: 'Last 6 Months', value: 'last_half_year' },
-    { label: 'Last 1 Year', value: 'last_1_year' },
+    { label: 'Last 1 Year', value: 'last_1_year' }
   ];
 
   const orderOptions = [
     { label: 'Amount High to Low', value: 'amount_high_to_low' },
     { label: 'Amount Low to High', value: 'amount_low_to_low' },
-    { label: 'Registration Date Low to High', value: 'reg_date_low_to_high' },
+    { label: 'Registration Date Low to High', value: 'reg_date_low_to_high' }
   ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/reportsMembers.json'); // Update path here
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const data = await response.json();
+        setActiveMembers(data.activeMembers);
+        setExpiredMembers(data.expiredMembers);
+        setGuestDetails(data.guestDetails);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const generateReport = () => {
     setDisplayDialog(true);
@@ -107,6 +119,14 @@ const ReportGenerator = () => {
 
     XLSX.writeFile(workbook, 'report.xlsx');
   };
+
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
 
   return (
     <div className="report-generator-unique">

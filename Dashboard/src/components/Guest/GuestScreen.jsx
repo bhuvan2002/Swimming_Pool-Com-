@@ -1,30 +1,40 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import "./GuestRegistrationForm.css";
+import './GuestRegistrationForm.css';
 
 const GuestScreen = () => {
   const initialValues = {
     firstName: '',
     lastName: '',
-    contact: '+91',
+    contact: '+91 ',
     gender: '',
     amount: '',
     paymentType: '',
     transactionId: '',
-    numberOfPersons: 1, // Default value set to 1
+    numberOfPersons: 1,
   };
 
-  const validationSchema = Yup.object().shape({
+  const validationSchema = Yup.object({
     firstName: Yup.string().required('First Name is required'),
     lastName: Yup.string().required('Last Name is required'),
-    contact: Yup.string().required('Contact is required'),
+    contact: Yup.string().required('Contact Number is required'),
     gender: Yup.string().required('Gender is required'),
     amount: Yup.number()
       .required('Amount is required')
       .positive('Amount must be positive'),
     paymentType: Yup.string().required('Payment Type is required'),
-    transactionId: Yup.string().required('Transaction ID is required'),
+    transactionId: Yup.string().test(
+      'transactionIdRequired',
+      'Transaction ID is required',
+      function(value) {
+        const { paymentType } = this.parent;
+        if (paymentType === 'scan') {
+          return value ? true : this.createError({ path: this.path, message: 'Transaction ID is required' });
+        }
+        return true;
+      }
+    ),
     numberOfPersons: Yup.number()
       .required('Number of Persons is required')
       .min(1, 'Number of Persons cannot be less than 1'),
@@ -44,7 +54,7 @@ const GuestScreen = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {() => (
+          {({ values }) => (
             <Form>
               <div className="guest-form-group">
                 <div className="input-row">
@@ -118,13 +128,20 @@ const GuestScreen = () => {
                 <ErrorMessage name="paymentType" component="div" className="error" />
               </div>
 
-              <div className="guest-form-group">
-                <div className="input-row">
-                  <label htmlFor="transactionId">Transaction ID</label>
-                  <Field type="text" id="transactionId" name="transactionId" placeholder="Enter transaction ID" />
+              {values.paymentType === 'scan' && (
+                <div className="guest-form-group">
+                  <div className="input-row">
+                    <label htmlFor="transactionId">Transaction ID</label>
+                    <Field
+                      type="text"
+                      id="transactionId"
+                      name="transactionId"
+                      placeholder="Enter transaction ID"
+                    />
+                  </div>
+                  <ErrorMessage name="transactionId" component="div" className="error" />
                 </div>
-                <ErrorMessage name="transactionId" component="div" className="error" />
-              </div>
+              )}
 
               <div className="guest-form-group">
                 <div className="input-row">
@@ -133,7 +150,7 @@ const GuestScreen = () => {
                     type="number"
                     id="numberOfPersons"
                     name="numberOfPersons"
-                    min="1" // Set minimum value to 1
+                    min="1"
                   />
                 </div>
                 <ErrorMessage name="numberOfPersons" component="div" className="error" />

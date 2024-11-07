@@ -1,92 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { Card } from "primereact/card"; // Import Card component
+import { Card } from "primereact/card";
 import { useNavigate } from "react-router-dom";
 import "./membersinfo.css";
 
 const MemberList = () => {
   const navigate = useNavigate();
+  const [membersExpiringToday, setMembersExpiringToday] = useState([]);
+  const [membersExpiringIn5Days, setMembersExpiringIn5Days] = useState([]);
+  const [allMembers, setAllMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const goToAboutPage = () => {
-    console.log("Navigating to New Member Registration"); // Debugging log
-    navigate("/NewMemberRegistration"); // Ensure this matches the route
+    console.log("Navigating to New Member Registration");
+    navigate("/NewMemberRegistration");
   };
 
-  const [membersExpiringToday] = useState([
-    {
-      name: "Srinidhi",
-      contact: "1234567890",
-      paymentstatus: "Paid",
-      payment: "5000",
-      package: "Basic",
-    },
-    {
-      name: "Vijay",
-      contact: "0987654321",
-      paymentstatus: "Pending",
-      payment: "2000",
-      package: "Premium",
-    },
-    {
-      name: "Pavan",
-      contact: "1112223334",
-      paymentstatus: "Partial",
-      payment: "1200",
-      package: "Standard",
-    },
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/membersData.json');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const data = await response.json();
+        setMembersExpiringToday(data.membersExpiringToday);
+        setMembersExpiringIn5Days(data.membersExpiringIn5Days);
+        setAllMembers(data.allMembers);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const [membersExpiringIn5Days] = useState([
-    {
-      name: "Pavan",
-      contact: "1112223334",
-      paymentstatus: "Partial",
-      payment: "1400",
-      package: "Standard",
-    },
-    {
-      name: "Srinidhi",
-      contact: "1234567890",
-      paymentstatus: "Paid",
-      payment: "5000",
-      package: "Basic",
-    },
-    {
-      name: "Vijay",
-      contact: "0987654321",
-      paymentstatus: "Paid",
-      payment: "10000",
-      package: "Premium",
-    },
-  ]);
+    fetchData();
+  }, []);
 
-  const [allMembers] = useState([
-    {
-      name: "Bhuvan",
-      contact: "2223334445",
-      paymentstatus: "Pending",
-      payment: "5000",
-      daysLeft: "10",
-      package: "Basic",
-    },
-    {
-      name: "Srinidhi",
-      contact: "1234567890",
-      paymentstatus: "Paid",
-      payment: "15000",
-      package: "Basic",
-    },
-    {
-      name: "Vijay",
-      contact: "0987654321",
-      paymentstatus: "Partial",
-      payment: "2000",
-      package: "Premium",
-    },
-  ]);
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
 
   const actionTemplate = () => (
     <div>
@@ -97,9 +58,10 @@ const MemberList = () => {
   );
 
   const titleStyle = {
-    fontFamily: "'YourChosenFont', sans-serif", // Replace with your desired font
-    fontSize: "1.5rem", // Adjust size as needed
-    color: "#333", // Set your desired text color
+    fontFamily: "'YourChosenFont', sans-serif",
+    fontSize: "1.5rem",
+    color: "#333",
+    textAlign: "left",
   };
 
   return (
@@ -113,7 +75,8 @@ const MemberList = () => {
         />
       </div>
 
-      <Card title={<span style={titleStyle}>Members List - Expiring Today</span>} style={{ backgroundColor: "white" }} className="mt-5">
+      <Card style={{ backgroundColor: "white" }} className="mt-5 margin-bottom">
+        <div style={{ marginBottom: "20px", marginLeft: "-1210px",fontSize: "1.5rem", fontWeight: "bold", ...titleStyle }}>Members List - Expiring Today</div>
         <DataTable value={membersExpiringToday} className="custom-table">
           <Column field="name" header="Name" />
           <Column field="contact" header="Contact" />
@@ -124,7 +87,8 @@ const MemberList = () => {
         </DataTable>
       </Card>
 
-      <Card title={<span style={titleStyle}>Members List - Expiring in 5 Days</span>} style={{ backgroundColor: "white" }} className="mt-5">
+      <Card style={{ backgroundColor: "white" }} className="mt-5">
+        <div style={{ marginBottom: "20px", marginLeft: "-1160px",fontSize: "1.5rem", fontWeight: "bold", ...titleStyle }}>Members List - Expiring in 5 Days</div>
         <DataTable value={membersExpiringIn5Days} className="custom-table">
           <Column field="name" header="Name" />
           <Column field="contact" header="Contact" />
@@ -135,18 +99,20 @@ const MemberList = () => {
         </DataTable>
       </Card>
 
-      <Card title={<span style={titleStyle}>Full Members List</span>} style={{ backgroundColor: "white" }} className="mt-5">
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "60%" }}>
-          <div className="p-inputgroup" style={{ flexGrow: 2, marginLeft: "20px" }}>
+      <Card style={{ backgroundColor: "white" }} className="mt-5">
+        <div style={{ display: "flex", marginLeft: "-1030px",justifyContent: "space-between", marginBottom: "20px", fontSize: "1.5rem", fontWeight: "bold", ...titleStyle }}>
+          <span style={titleStyle}>Full Members List</span>
+          <div className="p-inputgroup" style={{ maxWidth: "40%", marginLeft: "20px" }}>
             <span className="p-inputgroup-addon">
               <i className="pi pi-search"></i>
             </span>
             <InputText
               placeholder="Search Members ( Enter Name or Contact Number )"
-              style={{ width: "100%", minWidth: "250px", marginTop:"" }}
+              style={{ width: "100%", minWidth: "250px" }}
             />
           </div>
         </div>
+
         <DataTable value={allMembers} className="custom-table" style={{ marginTop: "10px" }}>
           <Column field="name" header="Name" />
           <Column field="contact" header="Contact" />

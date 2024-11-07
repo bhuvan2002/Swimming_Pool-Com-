@@ -48,6 +48,13 @@ const Scheduler = () => {
 
   const handleDateChange = (e) => {
     const newDate = e.value;
+
+    if (!newDate) {
+      // Handle the case where the date is cleared
+      setDate(new Date()); // Set to current date or any default date you prefer
+      return;
+    }
+
     setDate(newDate);
 
     if (!guestData[newDate.toDateString()]) {
@@ -310,4 +317,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default App; 

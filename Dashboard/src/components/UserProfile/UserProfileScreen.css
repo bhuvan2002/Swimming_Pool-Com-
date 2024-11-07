@@ -54,6 +54,7 @@
 .error-message {
     color: #d9534f; /* Red color for error messages */
     font-size: 0.875rem; /* Smaller font size for errors */
+    margin-top: 0.5rem; /* Adds space between input and error message */
 }
 
 /* Styles for input groups */

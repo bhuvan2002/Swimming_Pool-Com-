@@ -1,18 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from 'primereact/card';
-import './Dashboard.css';  // Custom CSS for styling
+import './Dashboard.css'; // Custom CSS for styling
 
 const Dashboard = () => {
-  const cardData = [
-    { title: "Today's Registration ", count: 100 },
-    { title: "Current Month Registrations  ", count: 100},
-    { title: "Total Active Members         ", count: 100},
-    { title: "Members with Expired Packages", count: 100},
-    { title: "Total Guests Today     ", count: 100},
-    { title: "Today Payment     ", count: 100},
-    { title: "Current Month's Payment      ", count: 100},
-    { title: "Total Payments Pending     ", count: 100},
-  ];
+  const [cardData, setCardData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/cardData.json');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const data = await response.json();
+        setCardData(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
 
   return (
     <div className="dashboard">

@@ -16,12 +16,12 @@ const SmsSettings = () => {
           registrationSuccessMessage: '',
         }}
         validationSchema={Yup.object({
-          fiveDaysEarlier: Yup.string().required('Required'),
-          oneDayBefore: Yup.string().required('Required'),
-          expiryDay: Yup.string().required('Required'),
-          oneMonthExpired: Yup.string().required('Required'),
-          registrationMessage: Yup.string().required('Required'),
-          registrationSuccessMessage: Yup.string().required('Required'),
+          fiveDaysEarlier: Yup.string().required('5 Days Earlier Data Required'),
+          oneDayBefore: Yup.string().required('1 Day Before Data Required'),
+          expiryDay: Yup.string().required('Expiry Day Data Required'),
+          oneMonthExpired: Yup.string().required('One Month Expired Data Required'),
+          registrationMessage: Yup.string().required('Registration Message Data Required'),
+          registrationSuccessMessage: Yup.string().required('Registration Success Message Data Required'),
         })}
         onSubmit={(values) => {
           console.log('SMS Settings Submitted: ', values);

@@ -7,9 +7,9 @@ export const Navigation = (props) => {
   const navStyle = {
     display: 'flex',
     width: '100%', // Full width
-    padding: '0 20px', // Add some horizontal padding
+    padding: '0 90px', // Add some horizontal padding
     boxSizing: 'border-box', // Include padding in width calculation
-    marginRight: '-55%',
+    marginRight: '-65%',
   };
 
   const navItemStyle = {
@@ -56,11 +56,11 @@ export const Navigation = (props) => {
           <ul className="nav navbar-nav navbar-right" style={navStyle}>
             {/* Existing nav items */}
             <li style={navItemStyle}><a href="#about" className="page-scroll">About</a></li>
-            <li style={navItemStyle}><a href="#why-marlin" className="page-scroll">Why Marlin</a></li>
+            {/* <li style={navItemStyle}><a href="#why-marlin" className="page-scroll">Why Marlin</a></li> */}
             <li style={navItemStyle}><a href="#services" className="page-scroll">Packages</a></li>
             <li style={navItemStyle}><a href="#contact" className="page-scroll">Contact</a></li>
-            <li style={navItemStyle}><a href="#review" className="page-scroll">Review</a></li>
-            <li style={navItemStyle}><a href="#events" className="page-scroll">Events</a></li>
+            {/* <li style={navItemStyle}><a href="#review" className="page-scroll">Review</a></li>
+            <li style={navItemStyle}><a href="#events" className="page-scroll">Events</a></li> */}
             <li style={navItemStyle}><Link to="/login" className="page-scroll">Login</Link></li>
           </ul>
         </div>
