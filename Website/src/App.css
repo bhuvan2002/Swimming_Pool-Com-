@@ -1,0 +1,25 @@
+@media screen and (max-width: 400px) {
+  #features {
+    padding: 20px;
+    width: 111%;
+  }
+  #about,
+  #services,
+  #testimonials,
+  #team,
+  #contact,
+  #footer {
+    width: 111%;
+  }
+
+  #portfolio {
+    width: 110%;
+  }
+}
+.zoom-out {
+  transform: scale(0.8);
+  transform-origin: top left;
+  width: 125%; /* Adjust width to maintain full coverage */
+  overflow: hidden; /* Prevent overflow */
+}
+
